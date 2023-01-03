@@ -7,7 +7,7 @@ The code and project was made by Emma Risgaard Olsen, 5th semester student at Co
 
 The repository contains the following:
 
-| Column 1 | Col 2 | 
+| File/folder | Content | 
 |:--|:-:|
 |`scraping_url_to_txt.Rmd`|R Markdown used to scrape articles from URL using the `rvest` package|
 |`scraped_txts`|Folder containing the scraped articles as separate .txt files|
