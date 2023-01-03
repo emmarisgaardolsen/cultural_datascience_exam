@@ -1,0 +1,130 @@
+---
+title: "test-Rvest"
+author: "EOL"
+date: "2022-12-26"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(rvest)
+```
+
+# Create a vector of URLs
+```{r}
+urls <- c(
+  "https://dansketaler.dk/tale/poul-schlueters-nytaarstale-1993/",
+  "https://dansketaler.dk/tale/poul-nyrup-rasmussens-nytaarstale-1994/",
+  "https://dansketaler.dk/tale/poul-nyrup-rasmussens-nytaarstale-1995/",
+  "https://dansketaler.dk/tale/statsminister-poul-nyrup-rasmussens-nytaarstale-1996/",
+  "https://dansketaler.dk/tale/poul-nyrup-rasmussens-nytaarstale-1997/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/poul-nyrup-rasmussens-nytaarstale-1-januar-1998/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/poul-nyrup-rasmussens-nytaarstale-1-januar-1999/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/poul-nyrup-rasmussens-nytaarstale-1-januar-2000/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/poul-nyrup-rasmussens-nytaarstale-1-januar-2001/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2002/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2003/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2004/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2005/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2006/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2007/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2008/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/anders-fogh-rasmussens-nytaarstale-1-januar-2009/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2010/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2011/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/helle-thorning-schmidts-nytaarstale-1-januar-2012/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/helle-thorning-schmidts-nytaarstale-1-januar-2013/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/helle-thorning-schmidts-nytaarstale-1-januar-2014/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/helle-thorning-schmidts-nytaarstale-1-januar-2015/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2016/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2017/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2018/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/lars-loekke-rasmussens-nytaarstale-1-januar-2019/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/mette-frederiksens-nytaarstale-1-januar-2020/",
+  "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/mette-frederiksens-nytaarstale-1-januar-2021/",
+  "https://www.stm.dk/statsministeren/taler/mette-frederiksens-nytaarstale-1-januar-2022/",
+  "https://www.stm.dk/statsministeren/nytaarstaler-siden-1940/mette-frederiksens-nytaarstale-1-januar-2023/"
+)
+```
+
+# Scrape text 
+```{r}
+# Loop over the URLs
+for (url in urls) {
+  # Read the HTML from the URL
+  webpage <- read_html(url)
+  
+  # Scrape the text from the HTML
+  paragraphs <- html_nodes(webpage, "p")
+  text <- html_text(paragraphs)
+  
+  # Replace hyphens with underscores in the file name
+  filename <- paste(gsub("-", "_", basename(url)), ".txt", sep="")
+  
+  # Create the full file path for the text file
+  filepath <- file.path("scraped_txts", filename)
+  
+  # Save the text to a file
+  write(text, file = filepath)
+}
+
+```
+
+```{r}
+# Install and load the `stringr` package
+library(stringr)
+
+# Set the path to the scraped_txts folder
+folder_path <- "scraped_txts"
+
+# Get a list of the .txt files in the folder
+txt_files <- list.files(path = folder_path, pattern = "*.txt", full.names = TRUE)
+
+# Define a function that processes a text file
+process_text_file <- function(txt_file, pattern) {
+  # Read in the contents of the .txt file
+  text <- readLines(txt_file)
+
+  # Find the index of the line that contains the specified pattern
+  index <- which(str_detect(text, pattern))
+
+  # If the line was found, remove the text before it
+  if (length(index) > 0) {
+    text <- text[(index + 1):length(text)]
+  }
+
+  # Write the modified text back to the file
+  writeLines(text, txt_file)
+}
+
+# Loop over the .txt files and process them
+for (txt_file in txt_files) {
+  process_text_file(txt_file, "Statsministerens nytårstale i tekst:")
+  process_text_file(txt_file, "Det talte ord gælder.")
+  process_text_file(txt_file, "Det talte ord gælder")
+  process_text_file(txt_file, "Korrekturlæst")
+  
+} 
+
+```
+
+
+
+
+```{r}
+url <- "https://www.regeringen.dk/aktuelt/statsministerens-nytaarstale/mette-frederiksens-nytaarstale-1-januar-2021/"
+webpage <- read_html(url)
+paragraphs <- html_nodes(webpage, "p")
+text <- html_text(paragraphs)
+write(text, file = "scraped_text.txt")
+```
+
+```{r}
+
+
+
+```
+
