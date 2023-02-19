@@ -1,4 +1,4 @@
-# Cultural Data Science Exam - NLP & Danish Prime Minister's New Year's Speeches 
+# Cultural Data Science Exam - NLP & Danish Prime Ministers' New Year's Speeches 
 
 This repository holds all necessary files to run the analyses conducted in my Introduction to Cultural Datascience Exam Project in January 2023. The project employs various NLP techniques and text mining methods to conduct an exploratory analysis of the language in 30 New Year's Speeches held by Danish Prime Ministers in the period 1993 - 2023. 
 
